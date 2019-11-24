@@ -10,9 +10,9 @@ export class LoginPage {
     }
 
     signin = () => this.find('//*[contains(text(), "Войти")]');
-    byemail = () => this.find('//*[contains(text(), "Войти по почте")]');
-    email = () => this.find('//div/*[contains(text(),"Почта")]');
-    password = () => this.find('//div/*[contains(text(),"Пароль")]');
+    emailButton = () => this.find('//*[contains(text(), "Войти по почте")]');
+    email = () => this.find('//input[@name="email"]');
+    password = () => this.find('//input[@name="password"]');
     submit = () => this.find('//button/*[contains(text(),"Войти")]');
     
     
