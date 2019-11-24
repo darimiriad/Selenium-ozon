@@ -1,5 +1,6 @@
-import { Builder, WebDriver, Capabilities, until, By } from "selenium-webdriver";
-import { LoginPage, AddProduct } from "../../pagesObject/login.po";
+import { Builder, WebDriver, Capabilities } from "selenium-webdriver";
+import { LoginPage } from "../../pagesObject/login.po";
+import { MainPage } from "../../pagesObject/main.po";
 import { CalendarPage } from "../../pagesObject//calendar.po";
 import { App } from "../../pagesObject/config.po";
 import { SeleniumUtils } from "../../utils/se.utils";
@@ -20,15 +21,13 @@ capabilities.set("goog:chromeOptions", {
 describe("Login form", function () {
   let driver: WebDriver;
   let page: LoginPage;
-  let adding: AddProduct;
-  let calendarPage: CalendarPage;
+  let main: MainPage;
   let browser: SeleniumUtils;
 
   before(async function () {
     driver = await new Builder().withCapabilities(capabilities).build();
     page = new LoginPage(driver);
-    adding = new AddProduct(driver);
-    calendarPage = new CalendarPage(driver);
+    main = new MainPage(driver);
     browser = new SeleniumUtils(driver);
   });
 
@@ -66,17 +65,17 @@ describe("Login form", function () {
 
   it("Positive login ozon", async function () {
     browser.go(App.url);
-    await assert.equal (await page.isPage(), true);
-    await page.signin().click();
-    await driver.findElement(By.css('//*[contains(text(), "Войти по почте")]')).click();
+    await main.isLoad();
+    await browser.click(page.signin());
+    await browser.click(page.byemail());
     await browser.keys(page.email(), App.user.login);
     await browser.keys(page.password(), App.user.password);
     await browser.click(page.submit());
-    await page.isLoad();
-    await assert.equal(await page.isPage(), true);
+    await assert.equal (await main.isMain(), true);
+    //await assert.equal(await main.isLoad(), true);
   });
 
-  it("Negative login ozon", async function () {
+  /*it("Negative login ozon", async function () {
     browser.go(App.url);
     await page.isLoad();
     await driver.findElement(By.css('div.a3g0.a2w6')).click();
@@ -91,25 +90,8 @@ describe("Login form", function () {
     browser.sleep(3000);
     let exist = await driver.findElement(By.css("div.a3a6")).then(() => true, () => false);
     await assert.equal(true, true);
-  });
-
-  /*it("Add product", async function () {
-    browser.go(App.url);
-    await adding.LoadIs();
-    await driver.findElement(By.css('a.link.ak3')).click();
-    browser.sleep(3000);
-    await driver.findElement(By.css("ddiv.b5q0"));
-    await driver.findElement(By.css('.n5:first-child')).click();
-    browser.sleep(3000);
-    await browser.keys(page.email(), App.user.login);
-    browser.sleep(3000);
-    await browser.keys(page.password(), "qazxsw_0808");
-    browser.sleep(3000);
-    await browser.click(page.submit());
-    browser.sleep(3000);
-    let exist = await driver.findElement(By.css("ddiv.b5q0")).then(() => true, () => false);
-    await assert.equal(true, true);
   });*/
+
 
   after(() => driver && driver.quit());
 });
